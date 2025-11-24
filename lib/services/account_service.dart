@@ -34,7 +34,10 @@ class AccountService {
   addAccount(Account account) async {
     List<Account> listAccounts = await getAll();
     listAccounts.add(account);
+    save(listAccounts, accountName: account.name);
+  }
 
+  save(List<Account> listAccounts, {String accountName = ""}) async {
     List<Map<String, dynamic>> listContent = [];
     for (Account account in listAccounts) {
       // Pega o account e tranforma em map
@@ -44,7 +47,7 @@ class AccountService {
     String content = json.encode(listContent);
 
     // Cria a requisição para enviar e atualizar a api gist
-    Response response = await post(
+    Response response = await patch(
       Uri.parse(url),
       headers: {"Authorization": "Bearer $githubApiKey"},
       body: json.encode({
@@ -58,11 +61,11 @@ class AccountService {
 
     if (response.statusCode.toString()[0] == "2") {
       _streamController.add(
-        "${DateTime.now()} | Requisição de adição bem sucedida (${account.name}).",
+        "${DateTime.now()} | Requisição de adição bem sucedida ($accountName).",
       );
     } else {
       _streamController.add(
-        "${DateTime.now()} | Requisição falhou! (${account.name}).",
+        "${DateTime.now()} | Requisição falhou! ($accountName).",
       );
     }
   }

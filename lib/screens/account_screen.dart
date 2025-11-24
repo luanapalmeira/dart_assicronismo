@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:assicronismo/models/account.dart';
 import 'package:assicronismo/services/account_service.dart';
 import 'package:http/http.dart';
-import 'package:uuid/uuid.dart';
+// import 'package:uuid/uuid.dart';
 
 class AccountScreen {
   AccountService _accountService = AccountService();
@@ -34,8 +34,8 @@ class AccountScreen {
             break;
           }
           case "2": {
-            await _addNewAccount();
-            // await _addExampleAccount();
+            // await _addNewAccount();
+            await _addExampleAccount();
             break;
           }
           case "3": {
@@ -68,39 +68,61 @@ class AccountScreen {
     }
   }
 
-  // _addExampleAccount() async {
-  //   Account example = Account(
-  //     id: "ID555",
-  //     name: "Haley",
-  //     lastName: "Chirívia",
-  //     balance: 8001,
-  //   );
-  //   await _accountService.addAccount(example);
-  // }
-
-  _addNewAccount() async {
-    print("Qual o nome completo da pessoa?");
-    String? name = stdin.readLineSync();
-
-    if (name != null) {
-      print("Qual é o saldo inicial da conta?");
-      String? balanceString = stdin.readLineSync();
-      if (balanceString != null && double.tryParse(balanceString) != null) {
-        await _addAccount(name, double.parse(balanceString));
-
-        print("Conta criada com sucesso! 👏");
-      }
+  _addExampleAccount() async {
+    try {
+    Account example = Account(
+      id: "ID555",
+      name: "Haley",
+      lastName: "Chirívia",
+      balance: 8001,
+      accountType: "Brigadeiro",
+    );
+    await _accountService.addAccount(example);
+   } on Exception {
+      print("Ocorreu um problema ao tentar adicionar.");
     }
   }
 
-  _addAccount(String name, double balance) async {
-    Account newAccount = Account(
-      id: Uuid().v1(),
-      name: name.split(" ").first,
-      lastName: name.split(" ").length > 1 ? name.split(" ").last : "",
-      balance: balance,
-    );
+  // _addNewAccount() async {
+  //   try {
+  //     print("Qual o nome completo da pessoa?");
+  //     String? name = stdin.readLineSync();
 
-    await _accountService.addAccount(newAccount);
-  }
+  //     if (name == null || name.trim().isEmpty) {
+  //       throw FormatException("O nome não pode ser vazio.");
+  //     }
+
+  //     print("Qual é o saldo inicial da conta?");
+  //     String? balanceString = stdin.readLineSync();
+
+  //     double? balance = double.tryParse(balanceString ?? "");
+  //     if (balance == null) {
+  //       throw FormatException("Você deve digitar um número válido.");
+  //     }
+
+  //     await _addAccount(name, balance);
+
+  //     print("Conta criada com sucesso! 👏");
+  //   } on FormatException catch (e) {
+  //     print("Erro de formato: ${e.message}");
+  //   } catch (e) {
+  //     print("Erro inesperado: $e");
+  //   }
+
+  // _addAccount(String name, double balance) async {
+  //   try {
+  //     Account newAccount = Account(
+  //       id: Uuid().v1(),
+  //       name: name.split(" ").first,
+  //       lastName: name.split(" ").length > 1 ? name.split(" ").last : "",
+  //       balance: balance,
+  //     );
+
+  //     await _accountService.addAccount(newAccount);
+  //   } catch (e) {
+  //     throw Exception("Falha ao salvar a conta no serviço.");
+  //   }
+  // }
 }
+
+  
